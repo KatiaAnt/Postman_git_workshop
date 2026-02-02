@@ -1,0 +1,369 @@
+{
+  "info": {
+    "_postman_id": "55470787-bab2-4ff9-af12-7e61018e9272",
+    "name": "my_GithubAPI",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50816315",
+    "_collection_link": "https://go.postman.co/collection/50816315-55470787-bab2-4ff9-af12-7e61018e9272?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Repositories",
+      "item": [
+        {
+          "name": "List a public Repositerie for a user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Le nom du repos correspond à celui de la variable\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var repoFromVariable = pm.request.url.path[2];",
+                  "    pm.expect(jsonData.name).to.eql(repoFromVariable);",
+                  "});",
+                  "pm.test(\"Le nom du owner correspond à celui de la variable\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var ownerFromVariable = pm.request.url.path[1];",
+                  "    pm.expect(jsonData.owner.login).to.eql(ownerFromVariable);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/repos/:owner/:repo",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": "cybertraining-dsc"
+                },
+                {
+                  "key": "repo",
+                  "value": "su21-reu-361"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modifier un le nom d'un repo existante",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var variable_new_rand_repo_name = \"groupe1_\"+pm.variables.replaceIn('{{$randomInt}}');",
+                  "pm.environment.set(\"NewRandomRepoName\", variable_new_rand_repo_name);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"verification changement de nom\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    var new_preres_repo_name = pm.environment.get(\"NewRandomRepoName\");",
+                  "",
+                  "    pm.expect(jsonData.name).to.eql(new_preres_repo_name);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ACCESS_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{NewRandomRepoName}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/repos/:owner/:repo",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": "apiTestUserr"
+                },
+                {
+                  "key": "repo",
+                  "value": "repo-dst170"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a repository for the authen user",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "//const randomInteger = Math.floor(Math.random() * 1000);",
+                  "//var variable_repo_value = 'repo_dst_K_' + pm.variables.replaceIn(randomInteger)",
+                  "var variable_repo_value = 'repo_new_Katia_' + pm.variables.replaceIn('{{$randomInt}}');",
+                  "pm.environment.set(\"RandomRepoName\", variable_repo_value);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Repo name is corresponding to prereq repo name\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    var RandomRepoName_variable_name = pm.environment.get('RandomRepoName')",
+                  "",
+                  "    pm.expect(jsonData.name).to.eql(RandomRepoName_variable_name);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{NEW_ACCES_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{RandomRepoName}}\",\n    \"description\": \"Superheros Team ©\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/user/repos",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "user",
+                "repos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "apres le POST qui a cree un repo  modifier le nom du repo",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var variable_new_rand_repo_name = \"repo_modified_Katia\"+pm.variables.replaceIn('{{$randomInt}}');",
+                  "pm.environment.set(\"NewRandomRepoName\", variable_new_rand_repo_name);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"verification changement de nom\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "",
+                  "    var new_preres_repo_name = pm.environment.get(\"NewRandomRepoName\");",
+                  "",
+                  "    pm.expect(jsonData.name).to.eql(new_preres_repo_name);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{NEW_ACCES_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{NewRandomRepoName}}\",\n    \"description\": \"Superheros Team in action\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/repos/:owner/:repo",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": "SDET-1"
+                },
+                {
+                  "key": "repo",
+                  "value": "{{RandomRepoName}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "supprimer ce repo modifie",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{NEW_ACCES_TOKEN}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{NewRandomRepoName}}\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/repos/:owner/:repo",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "repos",
+                ":owner",
+                ":repo"
+              ],
+              "variable": [
+                {
+                  "key": "owner",
+                  "value": "SDET-1"
+                },
+                {
+                  "key": "repo",
+                  "value": "{{NewRandomRepoName}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
