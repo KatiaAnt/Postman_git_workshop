@@ -11,10 +11,10 @@
       "name": "Repositories",
       "item": [
         {
-          "name": "List a public Repositerie for a user",
+          "name": "List a public Repositery for a user",
           "event": [
             {
-              "listen": "test",
+              "listen": "test12341234",
               "script": {
                 "exec": [
                   "pm.test(\"Status code is 200\", function () {",
@@ -66,7 +66,7 @@
           "response": []
         },
         {
-          "name": "Modifier un le nom d'un repo existante",
+          "name": "Modifier le nom d'un repo existante",
           "event": [
             {
               "listen": "prerequest",
