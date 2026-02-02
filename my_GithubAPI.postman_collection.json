@@ -11,7 +11,11 @@
       "name": "Repositories",
       "item": [
         {
+<<<<<<< Updated upstream
           "name": "List a public Repositery for a user",
+=======
+          "name": "List a public Repositerie for a user et on le test!!!!!!!",
+>>>>>>> Stashed changes
           "event": [
             {
               "listen": "test12341234",
